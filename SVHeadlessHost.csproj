@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>SVHeadlessHost</AssemblyName>
+    <RootNamespace>SVHeadlessHost</RootNamespace>
+    <Version>0.1.0</Version>
+    <TargetFramework>net452</TargetFramework>
+    <Authors>DarkIrata</Authors>
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.2.2" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GamePath>C:\Users\wbatt\Desktop\Stardew Valley\</GamePath>
+  </PropertyGroup>
+
+</Project>

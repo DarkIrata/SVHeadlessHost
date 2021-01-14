@@ -1,0 +1,10 @@
+﻿{
+  "Name": "SV Server Host",
+  "Author": "DarkIrata",
+  "Version": "1.0.0",
+  "Description": "Following",
+  "UniqueID": "DarkIrata.SVHeadlessHost",
+  "EntryDll": "SVHeadlessHost.dll",
+  "MinimumApiVersion": "3.8.0",
+  "UpdateKeys": [ "GitHub:DarkIrata/SVHeadlessHost" ]
+}
