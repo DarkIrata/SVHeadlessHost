@@ -26,10 +26,9 @@ namespace SVHeadlessHost.Handler
                 this.ReceivePet();
             }
 
-            if (this.activeSaveData.PetReceived && this.activeSaveData.CaveSelected)
+            if (this.activeSaveData.InputRequiredSetupCompleted)
             {
                 this.monitor.Log("Rquired setup completed", LogLevel.Info);
-                this.activeSaveData.InputRequiredSetupCompleted = true;
                 Game1.player.CanMove = true;
             }
         }

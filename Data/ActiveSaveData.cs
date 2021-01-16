@@ -11,7 +11,10 @@ namespace SVHeadlessHost.Data
         public bool PetReceived { get; set; } = false;
 
         public bool CaveSelected { get; set; } = false;
-        public bool InputRequiredSetupCompleted { get; internal set; }
+
+        public bool InputRequiredSetupCompleted => this.PetReceived && this.CaveSelected;
+
+        public bool SetupCompleted { get; set; }
 
         public void Save(IModHelper helper) => helper.Data.WriteJsonFile(FilePath, this);
 

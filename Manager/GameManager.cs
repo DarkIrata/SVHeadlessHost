@@ -86,24 +86,11 @@ namespace SVHeadlessHost.Manager
                 return;
             }
 
-            if (!this.ActiveSaveData.InputRequiredSetupCompleted)
+            if (!this.ActiveSaveData.SetupCompleted)
             {
-                this.PetCaveHandler.Handle();
+                this.SetupWorld();
                 return;
             }
-
-            // Checks and if needed unlocks the Community Center Event
-            if (!Game1.player.eventsSeen.Contains(CommunityCenterEventId))
-            {
-                Game1.player.eventsSeen.Add(CommunityCenterEventId);
-                Game1.MasterPlayer.mailReceived.Add("ccDoorUnlock");
-                this.monitor.Log("Community Center unlocked!", LogLevel.Info);
-            }
-
-            //if (this.Config.upgradeHouse != 0 && Game1.player.HouseUpgradeLevel != this.Config.upgradeHouse)
-            //{
-            //    Game1.player.HouseUpgradeLevel = this.Config.upgradeHouse;
-            //}
 
             //lockPlayerChests
             //if (this.Config.lockPlayerChests)
@@ -138,6 +125,41 @@ namespace SVHeadlessHost.Manager
             //    }
 
             //}
+        }
+
+        private void SetupWorld()
+        {
+            if (!this.ActiveSaveData.InputRequiredSetupCompleted)
+            {
+                this.PetCaveHandler.Handle();
+                return;
+            }
+
+            // Checks and if needed unlocks the Community Center Event
+            if (!Game1.player.eventsSeen.Contains(CommunityCenterEventId))
+            {
+                Game1.player.eventsSeen.Add(CommunityCenterEventId);
+                Game1.MasterPlayer.mailReceived.Add("ccDoorUnlock");
+                this.monitor.Log("Community Center unlocked!", LogLevel.Info);
+            }
+
+            if (this.config.HostHouseUpgradeLevel != 0 &&
+                Game1.player.HouseUpgradeLevel != this.config.HostHouseUpgradeLevel)
+            {
+                // Since this only gets called on setup, there should be a possiblity to recall the upgrade (Command)
+                this.UpgradeHouse();
+            }
+
+            if (this.ActiveSaveData.InputRequiredSetupCompleted)
+            {
+                this.ActiveSaveData.SetupCompleted = true;
+                this.ActiveSaveData.Save(this.helper);
+            }
+        }
+
+        private void UpgradeHouse()
+        {
+            Game1.player.HouseUpgradeLevel = this.config.HostHouseUpgradeLevel;
         }
 
         public override void Dispose()
