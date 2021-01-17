@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using StardewModdingAPI;
+using SVHeadlessHost.Enums;
 using SVHeadlessHost.Manager;
 
 namespace SVHeadlessHost.Data
@@ -12,7 +13,11 @@ namespace SVHeadlessHost.Data
 
         public bool CaveSelected { get; set; } = false;
 
-        public bool InputRequiredSetupCompleted => this.PetReceived && this.CaveSelected;
+        public bool CommunityCenterFadeSelected { get; set; } = false;
+
+        public CommunityCenterFade CommunityCenterFade { get; set; } = CommunityCenterFade.CCBundles;
+
+        public bool InputRequiredSetupCompleted => this.PetReceived && this.CaveSelected && this.CommunityCenterFadeSelected;
 
         public bool SetupCompleted { get; set; }
 

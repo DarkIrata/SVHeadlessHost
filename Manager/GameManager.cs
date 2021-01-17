@@ -18,7 +18,7 @@ namespace SVHeadlessHost.Manager
 
         private ActiveSaveData ActiveSaveData { get; set; }
 
-        private PetCaveHandler PetCaveHandler { get; set; }
+        private RunPathHandler RunPathHandler { get; set; }
 
         public GameManager(ModConfig config, IModHelper helper, IMonitor monitor, ServerManager serverManager)
             : base(config, helper, monitor)
@@ -37,8 +37,8 @@ namespace SVHeadlessHost.Manager
         {
             this.ActiveSaveData = ActiveSaveData.Load(this.helper);
 
-            this.PetCaveHandler?.Dispose();
-            this.PetCaveHandler = new PetCaveHandler(this.config, this.helper, this.monitor, this.ActiveSaveData);
+            this.RunPathHandler?.Dispose();
+            this.RunPathHandler = new RunPathHandler(this.config, this.helper, this.monitor, this.ActiveSaveData);
         }
 
         public void OnSaving(object sender, SavingEventArgs e)
@@ -92,6 +92,8 @@ namespace SVHeadlessHost.Manager
                 return;
             }
 
+            this.RunPathHandler.EnforceRunPath();
+
             //lockPlayerChests
             //if (this.Config.lockPlayerChests)
             //{
@@ -131,7 +133,7 @@ namespace SVHeadlessHost.Manager
         {
             if (!this.ActiveSaveData.InputRequiredSetupCompleted)
             {
-                this.PetCaveHandler.Handle();
+                this.RunPathHandler.Handle();
                 return;
             }
 
@@ -150,6 +152,7 @@ namespace SVHeadlessHost.Manager
                 this.UpgradeHouse();
             }
 
+            // This isn't called in a else block so we can insure every setup step is completed
             if (this.ActiveSaveData.InputRequiredSetupCompleted)
             {
                 this.ActiveSaveData.SetupCompleted = true;

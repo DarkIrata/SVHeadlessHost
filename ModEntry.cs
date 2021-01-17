@@ -13,6 +13,15 @@ namespace SVHeadlessHost
 
         public DisplayManager DisplayManager { get; private set; }
 
+        /* TODO
+         *  Command System
+         *  Rights System 
+         *  Port Festivel Handling
+         *  Split Setup into own event subscriptions to reduce checks in ticks
+         *  Maybe make CCPath Selection be available through commands when players are ready and want to progress.
+         *   ^ Same for HouseUpgrades
+         */
+
         public override void Entry(IModHelper helper)
         {
             this.Config = helper.ReadConfig<ModConfig>();
