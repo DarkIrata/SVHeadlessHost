@@ -16,5 +16,17 @@ namespace SVHeadlessHost.Utilities
 
             Game1.chatBox.chatBox.RecieveCommandInput('\r');
         }
+
+        public static bool HasMoneyAndMailNotReceived(this Farmer farmer, int money, string mail) => farmer.Money >= money && !farmer.mailReceived.Contains(mail);
+
+        public static void AddedMailReceivedWithCosts(this Farmer farmer, int money, params string[] events)
+        {
+            farmer.Money -= money;
+
+            foreach (var gevent in events)
+            {
+                farmer.mailReceived.Add(gevent);
+            }
+        }
     }
 }

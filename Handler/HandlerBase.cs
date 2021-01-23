@@ -2,7 +2,7 @@
 
 namespace SVHeadlessHost.Handler
 {
-    public abstract class HandlerBase : BaseModClass
+    public abstract class HandlerBase : BaseModClass, IHandler
     {
         protected HandlerBase(ModConfig config, IModHelper helper, IMonitor monitor)
             : base(config, helper, monitor)

@@ -171,51 +171,38 @@ namespace SVHeadlessHost.Handler
                 return;
             }
 
-            if (this.HasMoneyAndMailNotReceived(10000, "JojaMember"))
+            if (Game1.player.HasMoneyAndMailNotReceived(10000, "JojaMember"))
             {
-                Game1.player.Money -= 5000;
-                Game1.player.mailReceived.Add("JojaMember");
+                Game1.player.AddedMailReceivedWithCosts(5000, "JojaMember");
                 GameUtils.SendChatMessage("Bought Joja Membership");
             }
-            else if (this.HasMoneyAndMailNotReceived(30000, "jojaBoilerRoom"))
+            else if (Game1.player.HasMoneyAndMailNotReceived(30000, "jojaBoilerRoom"))
             {
-                Game1.player.Money -= 15000;
-                Game1.player.mailReceived.Add("ccBoilerRoom");
-                Game1.player.mailReceived.Add("jojaBoilerRoom");
+                Game1.player.AddedMailReceivedWithCosts(15000, "ccBoilerRoom", "jojaBoilerRoom");
                 GameUtils.SendChatMessage("Bought Joja Minecarts");
             }
-            else if (this.HasMoneyAndMailNotReceived(40000, "jojaFishTank"))
+            else if (Game1.player.HasMoneyAndMailNotReceived(40000, "jojaFishTank"))
             {
-                Game1.player.Money -= 20000;
-                Game1.player.mailReceived.Add("ccFishTank");
-                Game1.player.mailReceived.Add("jojaFishTank");
+                Game1.player.AddedMailReceivedWithCosts(20000, "ccFishTank", "jojaFishTank");
                 GameUtils.SendChatMessage("Bought Joja Panning");
             }
-            else if (this.HasMoneyAndMailNotReceived(50000, "jojaCraftsRoom"))
+            else if (Game1.player.HasMoneyAndMailNotReceived(50000, "jojaCraftsRoom"))
             {
-                Game1.player.Money -= 25000;
-                Game1.player.mailReceived.Add("ccCraftsRoom");
-                Game1.player.mailReceived.Add("jojaCraftsRoom");
+                Game1.player.AddedMailReceivedWithCosts(25000, "ccCraftsRoom", "jojaCraftsRoom");
                 GameUtils.SendChatMessage("Bought Joja Bridge");
             }
-            else if (this.HasMoneyAndMailNotReceived(70000, "jojaPantry"))
+            else if (Game1.player.HasMoneyAndMailNotReceived(70000, "jojaPantry"))
             {
-                Game1.player.Money -= 35000;
-                Game1.player.mailReceived.Add("ccPantry");
-                Game1.player.mailReceived.Add("jojaPantry");
+                Game1.player.AddedMailReceivedWithCosts(35000, "ccPantry", "jojaPantry");
                 GameUtils.SendChatMessage("Bought Joja Greenhouse");
             }
-            else if (this.HasMoneyAndMailNotReceived(80000, "jojaVault"))
+            else if (Game1.player.HasMoneyAndMailNotReceived(80000, "jojaVault"))
             {
-                Game1.player.Money -= 40000;
-                Game1.player.mailReceived.Add("ccVault");
-                Game1.player.mailReceived.Add("jojaVault");
+                Game1.player.AddedMailReceivedWithCosts(40000, "ccVault", "jojaVault");
                 GameUtils.SendChatMessage("Bought Joja Bus");
                 Game1.player.eventsSeen.Add(eventId);
             }
         }
-
-        private bool HasMoneyAndMailNotReceived(int money, string mail) => Game1.player.Money >= money && !Game1.player.mailReceived.Contains(mail);
 
         public override void Dispose()
         {

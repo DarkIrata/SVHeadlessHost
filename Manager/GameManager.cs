@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Menus;
 using SVHeadlessHost.Data;
 using SVHeadlessHost.Enums;
 using SVHeadlessHost.Handler;
+using SVHeadlessHost.Handler.Festivals;
 using SVHeadlessHost.Utilities;
 
 namespace SVHeadlessHost.Manager
@@ -20,10 +23,26 @@ namespace SVHeadlessHost.Manager
 
         private RunPathHandler RunPathHandler { get; set; }
 
+        private List<Festival> festivales = new List<Festival>();
+        private SDate CurrentDay = null;
+
         public GameManager(ModConfig config, IModHelper helper, IMonitor monitor, ServerManager serverManager)
             : base(config, helper, monitor)
         {
             this.serverManager = serverManager;
+
+            this.festivales.Add(new Festival("Egg Festival", 13, Season.Spring, new EggFestivalHandler(this.config, this.helper, this.monitor)));
+            this.festivales.Add(new Festival("Flower Dance", 24, Season.Spring, new FlowerDanceHandler(this.config, this.helper, this.monitor)));
+            this.festivales.Add(new Festival("Grampas Ghost", 1, Season.Spring, new GrampasGhostHandler(this.config, this.helper, this.monitor), 3));
+
+            this.festivales.Add(new Festival("Luau", 11, Season.Sommer, new LuauHandler(this.config, this.helper, this.monitor)));
+            this.festivales.Add(new Festival("Dance of Jellies", 18, Season.Sommer, new JellyDanceHandler(this.config, this.helper, this.monitor)));
+
+            this.festivales.Add(new Festival("Stardew Valley Fair", 16, Season.Fall, new StardewValleyFairHandler(this.config, this.helper, this.monitor)));
+            this.festivales.Add(new Festival("Spirits Eve", 27, Season.Fall, new SpiritsEveHandler(this.config, this.helper, this.monitor)));
+
+            this.festivales.Add(new Festival("Festival of Ice", 8, Season.Winter, new IceFestivalHandler(this.config, this.helper, this.monitor)));
+            this.festivales.Add(new Festival("Feast of Winterstar", 25, Season.Winter, new WinterstarFeastHandler(this.config, this.helper, this.monitor)));
         }
 
         public override void RegisterEvents()
@@ -31,6 +50,8 @@ namespace SVHeadlessHost.Manager
             this.helper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;
             this.helper.Events.GameLoop.Saving += this.OnSaving;
             this.helper.Events.GameLoop.UpdateTicked += this.OnUpdateTicked;
+            this.helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
+            this.helper.Events.GameLoop.DayStarted += (s, e) => this.CurrentDay = SDate.Now();
         }
 
         private void GameLoop_SaveLoaded(object sender, SaveLoadedEventArgs e)
@@ -39,6 +60,8 @@ namespace SVHeadlessHost.Manager
 
             this.RunPathHandler?.Dispose();
             this.RunPathHandler = new RunPathHandler(this.config, this.helper, this.monitor, this.ActiveSaveData);
+
+            this.CurrentDay = SDate.Now();
         }
 
         public void OnSaving(object sender, SavingEventArgs e)
@@ -88,11 +111,8 @@ namespace SVHeadlessHost.Manager
 
             if (!this.ActiveSaveData.SetupCompleted)
             {
-                this.SetupWorld();
                 return;
             }
-
-            this.RunPathHandler.EnforceRunPath();
 
             //lockPlayerChests
             //if (this.Config.lockPlayerChests)
@@ -129,6 +149,27 @@ namespace SVHeadlessHost.Manager
             //}
         }
 
+        private void OnTimeChanged(object sender, TimeChangedEventArgs e)
+        {
+            if (!this.serverManager.IsActive)
+            {
+                return;
+            }
+
+            if (!this.ActiveSaveData.SetupCompleted)
+            {
+                this.SetupWorld();
+                return;
+            }
+
+            if (this.IsFestivalDay(this.CurrentDay))
+            {
+                return;
+            }
+
+            this.RunPathHandler.EnforceRunPath();
+        }
+
         private void SetupWorld()
         {
             if (!this.ActiveSaveData.InputRequiredSetupCompleted)
@@ -159,6 +200,8 @@ namespace SVHeadlessHost.Manager
                 this.ActiveSaveData.Save(this.helper);
             }
         }
+
+        private bool IsFestivalDay(SDate date) => this.festivales.Any(f => f.Date == date);
 
         private void UpgradeHouse()
         {
